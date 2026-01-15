@@ -427,7 +427,7 @@ export function CompanyAnalysis({ companyId }: { companyId: string }) {
             // Set fill directly on SVG and circle
             svg.setAttribute('fill', color);
             svg.style.color = color;
-            (svg as HTMLElement).style.fill = color;
+            (svg as any).style.fill = color;
             circle.setAttribute('fill', color);
           }
           

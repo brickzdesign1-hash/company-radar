@@ -1,0 +1,26 @@
+Next steps (actionable roadmap)
+
+0) Unblock local run
+- Get `docker compose up --build` working reliably (fix Docker Desktop / ports / WSL2 issues).
+
+1) Make search fast + stable
+- Create Neo4j full-text index `companyNameIndex` (used by `/companies/search`).
+- Optionally: add a one-time “setup” step (script or ingest flag) to create indexes automatically.
+
+2) Improve data quality for the UI
+- Enrich ingest so Directorship/Ownership relationships also store properties the UI expects (e.g. `role`, `start_date`) when present in the dataset.
+- Store/normalize company address fields so the header shows consistent data.
+
+3) Graph visualization (Frontend)
+- Implement the “Graph” tab on the company page (currently placeholder).
+- Extend backend network endpoint to return nodes+edges (not only a flat list), so the frontend can render a real graph.
+
+4) Production readiness basics
+- Add `.env.example` (backend + frontend) with documented env vars:
+	- Backend: `USE_MOCK_DATA`, `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`, `NEO4J_DATABASE`
+	- Frontend: `NEXT_PUBLIC_API_BASE_URL`
+- Add basic request logging + error details for debugging.
+
+5) Real status provider integration
+- Replace `NorthDataStatusProvider` placeholder with a real integration (when API access is available).
+- Add rate limiting + caching to avoid repeated external calls.
