@@ -1,0 +1,54 @@
+services:
+  neo4j:
+    image: neo4j:5
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      # Passwort muss mindestens 8 Zeichen lang sein
+      NEO4J_AUTH: "neo4j/testpassword"
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+      # Korrekte Parameternamen für Neo4j 5 (mit doppelten Unterstrichen)
+      NEO4J_server_memory_heap_initial__size: "2G"
+      NEO4J_server_memory_heap_max__size: "2G"
+    volumes:
+      - neo4j_data:/data
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=testpassword
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - neo4j
+
+  frontend:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      # node_modules nicht vom Host überschreiben (Performance)
+      - /app/node_modules
+      - /app/.next
+    # Installiert Abhängigkeiten und startet den Entwicklungsserver
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+      # Aktiviert Hot Reloading
+      - WATCHPACK_POLLING=true
+    tty: true
+    stdin_open: true
+
+volumes:
+  neo4j_data:

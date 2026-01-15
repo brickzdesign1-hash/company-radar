@@ -1,0 +1,657 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 6% 10%;
+    --card-foreground: 0 0% 98%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+    --border: 240 4% 16%;
+    --ring: 24 95% 53%;
+  }
+}
+
+body {
+  background: #0a0a0f;
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+}
+
+/* Glassmorphism effect */
+.glass-card {
+  background: rgba(15, 15, 20, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Pulsing glow animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(251, 146, 60, 0.4), 0 0 16px rgba(251, 146, 60, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(251, 146, 60, 0.6), 0 0 24px rgba(251, 146, 60, 0.3);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* 3D Globe Animations */
+.globe-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+/* =====================================================
+   Modern Chart Bar Styling
+===================================================== */
+/* Rounded corners on bars */
+.recharts-bar-rectangle rect {
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+/* Subtle gradient overlay on bars */
+.recharts-bar-rectangle {
+  filter: saturate(1.1);
+}
+
+/* Smooth transitions for all chart elements */
+.recharts-bar-rectangle,
+.recharts-area-area,
+.recharts-area-curve,
+.recharts-line-curve {
+  transition: all 0.3s ease !important;
+}
+
+/* Active/hover state for bars - subtle scale + glow */
+.recharts-bar-rectangle:hover {
+  transform: scaleY(1.02);
+  transform-origin: bottom;
+}
+
+.globe-svg {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  animation: rotate-globe 60s linear infinite;
+}
+
+@keyframes rotate-globe {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.globe-line {
+  animation: pulse-line 4s ease-in-out infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.5);
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Tremor Chart Styling für Dark Mode */
+
+/* Tremor CSS Variable Overrides für Dark Theme */
+:root {
+  /* Tremor benötigt diese Variablen für Farben */
+  --tremor-content-subtle: #64748b; /* slate-500 */
+  --tremor-content-default: #94a3b8; /* slate-400 */
+  --tremor-content-emphasis: #e2e8f0; /* slate-200 */
+  --tremor-content-strong: #ffffff;
+  --tremor-content-inverted: #0a0a0f;
+  
+  --tremor-border-default: rgba(255, 255, 255, 0.08);
+  
+  --tremor-background-muted: #0f0f14;
+  --tremor-background-subtle: #141419;
+  --tremor-background-default: #0a0a0f;
+  --tremor-background-emphasis: #1a1a22;
+  
+  /* Tremor Brand Colors - Orange theme */
+  --tremor-brand: #f97316;
+  --tremor-brand-muted: #f97316;
+  --tremor-brand-subtle: #f97316;
+  --tremor-brand-emphasis: #f97316;
+  --tremor-brand-inverted: #ffffff;
+}
+
+/* =====================================================
+   CRITICAL: Force Recharts Bar Colors
+   Tremor uses Tailwind classes like fill-blue-500
+   We need to override with higher specificity
+===================================================== */
+
+/* Direct SVG rect selectors - highest priority */
+/* =====================================================
+   BAR CHART COLORS - Based on Tailwind fill-* classes
+===================================================== */
+
+/* Default fallback for bars without specific class */
+.recharts-layer.recharts-bar-rectangle rect,
+.recharts-bar-rectangles rect {
+  fill: #3b82f6 !important; /* Default blue */
+}
+
+/* Bar colors based on fill-* Tailwind classes on parent elements */
+/* Blue */
+.recharts-bar.fill-blue-500 rect,
+.recharts-bar[class*="fill-blue"] rect,
+[class*="fill-blue-500"] .recharts-bar-rectangle rect { fill: #3b82f6 !important; }
+
+/* Indigo - Bilanzsumme, Anlagevermögen (solide, stabil) */
+.recharts-bar.fill-indigo-500 rect,
+.recharts-bar[class*="fill-indigo"] rect,
+[class*="fill-indigo-500"] .recharts-bar-rectangle rect { fill: #6366f1 !important; }
+
+/* Emerald - Eigenkapital (positiv, gesund) */
+.recharts-bar.fill-emerald-500 rect,
+.recharts-bar[class*="fill-emerald"] rect,
+[class*="fill-emerald-500"] .recharts-bar-rectangle rect { fill: #10b981 !important; }
+
+/* Teal - Liquide Mittel (Liquidität) */
+.recharts-bar.fill-teal-500 rect,
+.recharts-bar[class*="fill-teal"] rect,
+[class*="fill-teal-500"] .recharts-bar-rectangle rect { fill: #14b8a6 !important; }
+
+/* Sky - Vorräte */
+.recharts-bar.fill-sky-500 rect,
+.recharts-bar[class*="fill-sky"] rect,
+[class*="fill-sky-500"] .recharts-bar-rectangle rect { fill: #0ea5e9 !important; }
+
+/* Cyan - Forderungen */
+.recharts-bar.fill-cyan-500 rect,
+.recharts-bar[class*="fill-cyan"] rect,
+[class*="fill-cyan-500"] .recharts-bar-rectangle rect { fill: #06b6d4 !important; }
+
+/* Rose - Verbindlichkeiten (Schulden) */
+.recharts-bar.fill-rose-500 rect,
+.recharts-bar[class*="fill-rose"] rect,
+[class*="fill-rose-500"] .recharts-bar-rectangle rect { fill: #f43f5e !important; }
+
+/* Orange - Rückstellungen */
+.recharts-bar.fill-orange-500 rect,
+.recharts-bar[class*="fill-orange"] rect,
+[class*="fill-orange-500"] .recharts-bar-rectangle rect { fill: #f97316 !important; }
+
+/* Zinc - RAP (neutral) */
+.recharts-bar.fill-zinc-500 rect,
+.recharts-bar[class*="fill-zinc"] rect,
+[class*="fill-zinc-500"] .recharts-bar-rectangle rect { fill: #71717a !important; }
+
+/* Violet - Jahresergebnis */
+.recharts-bar.fill-violet-500 rect,
+.recharts-bar[class*="fill-violet"] rect,
+[class*="fill-violet-500"] .recharts-bar-rectangle rect { fill: #8b5cf6 !important; }
+
+/* Amber (legacy) */
+.recharts-bar.fill-amber-500 rect,
+.recharts-bar[class*="fill-amber"] rect,
+[class*="fill-amber-500"] .recharts-bar-rectangle rect { fill: #f59e0b !important; }
+
+/* Slate (legacy) */
+.recharts-bar.fill-slate-500 rect,
+.recharts-bar[class*="fill-slate"] rect,
+[class*="fill-slate-500"] .recharts-bar-rectangle rect { fill: #64748b !important; }
+
+/* AreaChart colors */
+[class*="tremor-AreaChart"] [class*="fill-indigo"] path { fill: #6366f1 !important; }
+[class*="tremor-AreaChart"] [class*="fill-teal"] path { fill: #14b8a6 !important; }
+[class*="tremor-AreaChart"] [class*="fill-blue"] path { fill: #3b82f6 !important; }
+[class*="tremor-AreaChart"] [class*="fill-emerald"] path { fill: #10b981 !important; }
+
+[class*="tremor-AreaChart"] [class*="stroke-indigo"] path { stroke: #6366f1 !important; }
+[class*="tremor-AreaChart"] [class*="stroke-teal"] path { stroke: #14b8a6 !important; }
+[class*="tremor-AreaChart"] [class*="stroke-blue"] path { stroke: #3b82f6 !important; }
+[class*="tremor-AreaChart"] [class*="stroke-emerald"] path { stroke: #10b981 !important; }
+
+.recharts-area-area { opacity: 0.3 !important; }
+.recharts-area-curve { stroke-width: 2px !important; }
+
+/* Global Recharts Text Override */
+.recharts-text,
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text,
+text {
+  fill: #cbd5e1 !important; /* slate-300 */
+}
+
+/* Recharts Grid Lines */
+.recharts-cartesian-grid line {
+  stroke: #334155 !important; /* slate-700 */
+  stroke-opacity: 0.4 !important;
+}
+
+/* Recharts Axis Lines */
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: #475569 !important; /* slate-600 */
+}
+
+/* =====================================================
+   Tremor Legend - Better spacing and color fixes
+===================================================== */
+[class*="tremor-Legend"],
+.recharts-legend-wrapper {
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Legend items container */
+[class*="Legend"] > div,
+[class*="Legend"] > button,
+.recharts-legend-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-right: 20px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Legend text */
+[class*="tremor-Legend"] span,
+.recharts-legend-item-text {
+  color: #cbd5e1 !important;
+  font-size: 13px !important;
+  margin-left: 6px !important;
+}
+
+/* Legend color dots - FIX SIZE AND SPACING */
+[class*="tremor-Legend"] [class*="bg-"],
+[class*="Legend"] span[class*="bg-"],
+[class*="Legend"] div[class*="bg-"],
+.recharts-legend-icon {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  border-radius: 3px !important;
+  flex-shrink: 0 !important;
+}
+
+/* =====================================================
+   LEGEND SVG DOTS - Force fill colors
+===================================================== */
+/* The legend uses SVGs with fill="currentColor" and text-* classes.
+   We need to override the fill directly on the SVG based on text-* class */
+
+/* Default - make SVGs inherit color as fill */
+[class*="Legend"] svg[fill="currentColor"] {
+  fill: currentColor !important;
+}
+
+/* Indigo - Bilanzsumme, Anlagevermögen */
+[class*="Legend"] svg.text-indigo-500,
+[class*="Legend"] .text-indigo-500 svg,
+svg.text-indigo-500[fill="currentColor"] {
+  fill: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+/* Teal - Liquide Mittel */
+[class*="Legend"] svg.text-teal-500,
+[class*="Legend"] .text-teal-500 svg,
+svg.text-teal-500[fill="currentColor"] {
+  fill: #14b8a6 !important;
+  color: #14b8a6 !important;
+}
+
+/* Sky - Vorräte */
+[class*="Legend"] svg.text-sky-500,
+[class*="Legend"] .text-sky-500 svg,
+svg.text-sky-500[fill="currentColor"] {
+  fill: #0ea5e9 !important;
+  color: #0ea5e9 !important;
+}
+
+/* Cyan - Forderungen */
+[class*="Legend"] svg.text-cyan-500,
+[class*="Legend"] .text-cyan-500 svg,
+svg.text-cyan-500[fill="currentColor"] {
+  fill: #06b6d4 !important;
+  color: #06b6d4 !important;
+}
+
+/* Emerald - Eigenkapital */
+[class*="Legend"] svg.text-emerald-500,
+[class*="Legend"] .text-emerald-500 svg,
+svg.text-emerald-500[fill="currentColor"] {
+  fill: #10b981 !important;
+  color: #10b981 !important;
+}
+
+/* Rose - Verbindlichkeiten */
+[class*="Legend"] svg.text-rose-500,
+[class*="Legend"] .text-rose-500 svg,
+svg.text-rose-500[fill="currentColor"] {
+  fill: #f43f5e !important;
+  color: #f43f5e !important;
+}
+
+/* Orange - Rückstellungen */
+[class*="Legend"] svg.text-orange-500,
+[class*="Legend"] .text-orange-500 svg,
+svg.text-orange-500[fill="currentColor"] {
+  fill: #f97316 !important;
+  color: #f97316 !important;
+}
+
+/* Zinc - RAP */
+[class*="Legend"] svg.text-zinc-500,
+[class*="Legend"] .text-zinc-500 svg,
+svg.text-zinc-500[fill="currentColor"] {
+  fill: #71717a !important;
+  color: #71717a !important;
+}
+
+/* Violet - Jahresergebnis */
+[class*="Legend"] svg.text-violet-500,
+[class*="Legend"] .text-violet-500 svg,
+svg.text-violet-500[fill="currentColor"] {
+  fill: #8b5cf6 !important;
+  color: #8b5cf6 !important;
+}
+
+/* Blue (legacy) */
+[class*="Legend"] svg.text-blue-500,
+[class*="Legend"] .text-blue-500 svg,
+svg.text-blue-500[fill="currentColor"] {
+  fill: #3b82f6 !important;
+  color: #3b82f6 !important;
+}
+
+/* Amber (legacy) */
+[class*="Legend"] svg.text-amber-500,
+[class*="Legend"] .text-amber-500 svg,
+svg.text-amber-500[fill="currentColor"] {
+  fill: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+/* Slate (legacy) */
+[class*="Legend"] svg.text-slate-500,
+[class*="Legend"] .text-slate-500 svg,
+svg.text-slate-500[fill="currentColor"] {
+  fill: #64748b !important;
+  color: #64748b !important;
+}
+
+/* Dark mode variants */
+[class*="Legend"] svg[class*="dark:text-indigo"] { fill: #6366f1 !important; color: #6366f1 !important; }
+[class*="Legend"] svg[class*="dark:text-teal"] { fill: #14b8a6 !important; color: #14b8a6 !important; }
+[class*="Legend"] svg[class*="dark:text-sky"] { fill: #0ea5e9 !important; color: #0ea5e9 !important; }
+[class*="Legend"] svg[class*="dark:text-cyan"] { fill: #06b6d4 !important; color: #06b6d4 !important; }
+[class*="Legend"] svg[class*="dark:text-emerald"] { fill: #10b981 !important; color: #10b981 !important; }
+[class*="Legend"] svg[class*="dark:text-rose"] { fill: #f43f5e !important; color: #f43f5e !important; }
+[class*="Legend"] svg[class*="dark:text-orange"] { fill: #f97316 !important; color: #f97316 !important; }
+[class*="Legend"] svg[class*="dark:text-zinc"] { fill: #71717a !important; color: #71717a !important; }
+[class*="Legend"] svg[class*="dark:text-violet"] { fill: #8b5cf6 !important; color: #8b5cf6 !important; }
+[class*="Legend"] svg[class*="dark:text-blue"] { fill: #3b82f6 !important; color: #3b82f6 !important; }
+[class*="Legend"] svg[class*="dark:text-amber"] { fill: #f59e0b !important; color: #f59e0b !important; }
+[class*="Legend"] svg[class*="dark:text-slate"] { fill: #64748b !important; color: #64748b !important; }
+
+/* Background color fallbacks for non-SVG legend items */
+[class*="Legend"] [class*="bg-indigo"] { background-color: #6366f1 !important; }
+[class*="Legend"] [class*="bg-teal"] { background-color: #14b8a6 !important; }
+[class*="Legend"] [class*="bg-sky"] { background-color: #0ea5e9 !important; }
+[class*="Legend"] [class*="bg-cyan"] { background-color: #06b6d4 !important; }
+[class*="Legend"] [class*="bg-emerald"] { background-color: #10b981 !important; }
+[class*="Legend"] [class*="bg-rose"] { background-color: #f43f5e !important; }
+[class*="Legend"] [class*="bg-orange"] { background-color: #f97316 !important; }
+[class*="Legend"] [class*="bg-zinc"] { background-color: #71717a !important; }
+[class*="Legend"] [class*="bg-violet"] { background-color: #8b5cf6 !important; }
+[class*="Legend"] [class*="bg-blue"] { background-color: #3b82f6 !important; }
+[class*="Legend"] [class*="bg-amber"] { background-color: #f59e0b !important; }
+[class*="Legend"] [class*="bg-slate"] { background-color: #64748b !important; }
+
+/* Tooltip Styling */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  padding: 12px 16px !important;
+}
+
+.recharts-tooltip-item,
+.recharts-tooltip-label,
+.recharts-default-tooltip p,
+.recharts-default-tooltip li {
+  color: #f1f5f9 !important;
+}
+
+/* =====================================================
+   Modern Tremor Chart Tooltips - CLEAN DESIGN
+===================================================== */
+
+/* Remove any ellipse/oval shapes - reset all borders */
+.recharts-tooltip-wrapper,
+.recharts-tooltip-wrapper > div,
+.recharts-tooltip-wrapper * {
+  border-radius: 8px !important;
+  outline: none !important;
+}
+
+/* Main tooltip container */
+.recharts-tooltip-wrapper > div,
+[role="tooltip"],
+div[class*="rounded-tremor"],
+div[class*="tremor-base"],
+div[class*="bg-tremor"] {
+  background: rgba(15, 23, 42, 0.98) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(100, 116, 139, 0.5) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  padding: 12px 16px !important;
+}
+
+/* FORCE all text inside tooltips to be visible */
+.recharts-tooltip-wrapper *,
+.recharts-tooltip-wrapper p,
+.recharts-tooltip-wrapper span,
+.recharts-tooltip-wrapper div,
+.recharts-tooltip-wrapper li,
+[role="tooltip"] *,
+div[class*="rounded-tremor"] *,
+div[class*="tremor-base"] *,
+div[class*="bg-tremor"] * {
+  color: #f1f5f9 !important;
+  fill: #f1f5f9 !important;
+}
+
+/* Tooltip item layout - FIX OVERLAP with proper spacing */
+.recharts-tooltip-wrapper ul,
+.recharts-tooltip-wrapper li,
+.recharts-default-tooltip ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.recharts-tooltip-wrapper li,
+.recharts-tooltip-item {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 24px !important;
+  padding: 4px 0 !important;
+  min-width: 200px !important;
+}
+
+/* Category name (left side) */
+.recharts-tooltip-item-name {
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* Separator between name and value */
+.recharts-tooltip-item-separator {
+  display: none !important;
+}
+
+/* Value (right side) */
+.recharts-tooltip-item-value {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  margin-left: auto !important;
+}
+
+/* Tooltip title/header */
+.recharts-tooltip-label {
+  color: #e2e8f0 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.5) !important;
+}
+
+/* Remove any weird shapes or outlines */
+.recharts-tooltip-cursor {
+  fill: rgba(148, 163, 184, 0.08) !important;
+  stroke: none !important;
+}
+
+/* Hover state on chart elements */
+.recharts-bar-rectangle:hover rect,
+.recharts-area:hover .recharts-area-area {
+  filter: brightness(1.15) !important;
+  transition: filter 0.2s ease !important;
+}
+
+/* Chart bar hover glow effect */
+.recharts-bar-rectangle rect {
+  transition: filter 0.2s ease !important;
+}
+
+.recharts-bar-rectangle:hover rect {
+  filter: brightness(1.15) !important;
+}
+
+/* Area chart line glow on hover */
+.recharts-area-curve {
+  transition: stroke-width 0.2s ease !important;
+}
+
+.recharts-layer:hover .recharts-area-curve {
+  stroke-width: 2.5px !important;
+}
+
+/* Recharts cursor (vertical highlight on hover) - make it subtle rectangle */
+.recharts-tooltip-cursor {
+  fill: rgba(148, 163, 184, 0.08) !important;
+  stroke: none !important;
+  rx: 0 !important;
+  ry: 0 !important;
+}
+
+/* Modern tooltip animation */
+.recharts-tooltip-wrapper {
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out !important;
+}
+
+/* Ensure tooltip is above everything */
+.recharts-tooltip-wrapper {
+  z-index: 1000 !important;
+}
+
+/* Fix Tremor's internal tooltip styles - FORCE visibility */
+[data-testid="base-tooltip"],
+.tremor-base,
+div[class*="bg-tremor-background"],
+div[class*="dark:bg-"],
+div[class*="text-tremor"] {
+  background: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Override dark mode text colors in Tremor */
+[class*="dark:text-dark-tremor"],
+[class*="text-tremor-content"],
+[class*="text-tremor-default"],
+p[class*="tremor"],
+span[class*="tremor"] {
+  color: #f1f5f9 !important;
+}
+
+/* Override any white/light backgrounds in tooltips */
+[class*="tremor"] [class*="bg-white"],
+[class*="tremor"] [class*="bg-gray"],
+[class*="tremor"] [class*="bg-slate-50"],
+[class*="bg-tremor-background"] {
+  background: rgba(15, 23, 42, 0.98) !important;
+}
+
+/* Y-Axis and X-Axis specific */
+.recharts-yAxis text,
+.recharts-xAxis text {
+  fill: #94a3b8 !important; /* slate-400 */
+  font-size: 12px !important;
+}
+
+[class*="tremor-DonutChart"] .recharts-pie-label-text {
+  fill: #f1f5f9 !important;
+}

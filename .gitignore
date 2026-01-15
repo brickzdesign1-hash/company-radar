@@ -1,0 +1,12 @@
+# Erstellt die Datei direkt via PowerShell
+@'
+data/
+*.jsonl
+*.zip
+*.txt
+node_modules/
+.next/
+__pycache__/
+venv/
+.env*
+'@ | Out-File -Encoding utf8 .gitignore

@@ -1,0 +1,120 @@
+Option A (recommended): Docker Compose
+
+This repo runs 3 services via Docker Compose:
+- Neo4j (graph DB)
+- Backend (FastAPI on port 8000)
+- Frontend (Next.js dev server on port 3000)
+
+Important: `docker-compose.yml` uses the `backend/` and `frontend/` folders.
+The `Company_Radar_Final/` folder is a snapshot/duplicate and is NOT used by Docker Compose.
+
+---
+
+Prereq
+- Docker Desktop running
+- Ports free: 3000, 8000, 7474, 7687
+
+Start everything (from the project root)
+
+1) Run:
+	docker compose up --build
+
+2) Open:
+	Frontend: http://localhost:3000
+	Backend health: http://localhost:8000/health (expects {"status":"ok"})
+	Neo4j Browser: http://localhost:7474 (login neo4j / testpassword)
+
+Stop everything with Ctrl+C in that terminal.
+
+---
+
+How to use the program (after Docker is running)
+
+1) Import data into Neo4j (required)
+
+- Put your dataset file here (host path):
+	data/entities.ftm.json
+
+- Run the importer inside Docker:
+	docker compose run --rm backend python ingest.py --password testpassword
+
+Notes:
+- Import is streaming (RAM-safe) but can still take a while for large files.
+- If you do NOT import, the API will return 404 “Company not found”.
+
+2) (Optional but recommended) Create full-text index for search
+
+The search endpoint tries a Neo4j full-text index named `companyNameIndex`. If it doesn't exist,
+the backend falls back to a slower CONTAINS search.
+
+In Neo4j Browser (http://localhost:7474), run:
+	CREATE FULLTEXT INDEX companyNameIndex IF NOT EXISTS FOR (c:Company) ON EACH [c.name];
+
+3) Find a Company ID (ftm_id) to try
+
+Option A: Use the UI search
+- Open http://localhost:3000
+- Type at least 2 characters and select a company
+
+Option B: From Neo4j Browser
+- Run:
+	MATCH (c:Company)
+	RETURN c.ftm_id AS id, c.name AS name
+	ORDER BY name
+	LIMIT 20;
+
+4) Open a company detail page
+
+Route:
+	http://localhost:3000/company/<PASTE_ID_HERE>
+
+Expected:
+- Header with company name/address + status badge
+- “Netzwerk” tab showing connected persons (role/start_date may be empty depending on dataset)
+
+5) Try the API directly (optional)
+
+- Live check:
+	http://localhost:8000/companies/<ID>/live-check
+
+- Network:
+	http://localhost:8000/companies/<ID>/network
+
+- Search:
+	http://localhost:8000/companies/search?q=bau
+
+---
+
+Troubleshooting
+
+- `docker compose up` fails immediately
+	- Ensure Docker Desktop is running
+	- Ensure ports 3000/8000/7474/7687 are not in use
+	- In PowerShell, run from the folder that contains `docker-compose.yml`
+
+- Frontend loads but shows “Daten konnten nicht geladen werden.”
+	- Check backend health: http://localhost:8000/health
+	- Check the company exists in Neo4j (query above)
+
+- API returns 404 Company not found
+	- Data not imported yet, or the ID doesn’t exist in Neo4j
+
+- Neo4j login fails
+	- Username/password is neo4j / testpassword
+
+---
+
+Option B: Run locally (without Docker)
+
+1) Start Neo4j (Docker is easiest):
+	docker compose up neo4j
+
+2) Backend (in `backend/`):
+	Install deps from requirements.txt, then run:
+	uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+3) Frontend (in `frontend/`):
+	npm install
+	npm run dev
+
+Frontend uses `NEXT_PUBLIC_API_BASE_URL` (default: http://localhost:8000).
