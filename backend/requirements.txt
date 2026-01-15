@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+neo4j
+pydantic
+pandas
+ijson
+requests
