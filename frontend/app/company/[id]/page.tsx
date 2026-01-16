@@ -285,6 +285,7 @@ function QuickStatsCards({ companyId }: { companyId: string }) {
 }
 
 export default function CompanyProfilePage({ params }: { params: { id: string } }) {
+  
   const { data, error, isLoading } = useCompanyLiveCheck(params.id);
 
   return (
