@@ -4,6 +4,7 @@ import { SearchAutocomplete } from "@/components/SearchAutocomplete";
 import { useState, useEffect } from "react";
 
 export default function HomePage() {
+  console.log("DEBUG - API URL aus Umgebungsvariable:", process.env.NEXT_PUBLIC_API_BASE_URL);
   const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
