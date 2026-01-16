@@ -72,7 +72,7 @@ export default function HomePage() {
         </div>
 
         {/* Search Card */}
-        <div className={`w-full max-w-xl transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`w-full max-w-xl z-50 transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="relative">
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-orange-500/20 via-transparent to-blue-500/20 blur-xl opacity-50" />
             <div className="relative rounded-xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-sm">
